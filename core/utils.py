@@ -10,9 +10,9 @@ REGRAS_PONTUACAO = {
         "outro": 1
     }},
     "publicos_impactados": {"categoria": "valor", "pontuacao": {
-        "baixo": 1,    # 1 a 3 setores
-        "medio": 3,    # 4 a 6 setores
-        "alto": 5      # 7 ou mais setores
+        "baixo": 1,    
+        "medio": 3,    
+        "alto": 5      
     }},
     "esforco_estimado": {"categoria": "esforco", "pontuacao": {
         "baixo": 1,
@@ -25,10 +25,7 @@ def calcular_pontuacao(tipo_beneficio, esforco_estimado, total_departamentos):
     valor_total = 0
     esforco_total = 0
 
-    # Pontuação do tipo de benefício
     valor_total += REGRAS_PONTUACAO['tipo_beneficio']['pontuacao'].get(tipo_beneficio, 0)
-
-    # Pontuação dos públicos impactados
     if total_departamentos <= 3:
         valor_total += REGRAS_PONTUACAO['publicos_impactados']['pontuacao']['baixo']
     elif total_departamentos <= 6:
@@ -36,7 +33,6 @@ def calcular_pontuacao(tipo_beneficio, esforco_estimado, total_departamentos):
     else:
         valor_total += REGRAS_PONTUACAO['publicos_impactados']['pontuacao']['alto']
 
-    # Pontuação do esforço
     esforco_total += REGRAS_PONTUACAO['esforco_estimado']['pontuacao'].get(esforco_estimado, 0)
 
     return valor_total, esforco_total

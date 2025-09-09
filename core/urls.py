@@ -7,5 +7,4 @@ urlpatterns = [
  path('ideias/nova/', views.cadastrar_ideia, name='cadastrar_ideia'),
  path('ideias/<int:pk>/', views.detalhe_ideia, name='detalhe_ideia'),
  path('ideias/minhas-equipes/', views.ideias_minhas_equipes, name='ideias_minhas_equipes'),
- path("create-admin/", views.create_admin, name="create_admin"),
 ]
