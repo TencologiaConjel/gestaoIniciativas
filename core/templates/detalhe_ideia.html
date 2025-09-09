@@ -1,0 +1,659 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ ideia.titulo }} — Detalhes</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --background-light: #f8fafc;
+            --background-white: #ffffff;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background-light);
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header com navegação */
+        .detail-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .back-button i {
+            margin-right: 0.5rem;
+        }
+
+        .idea-title-header {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .idea-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+            opacity: 0.9;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .meta-item i {
+            margin-right: 0.5rem;
+        }
+
+        /* Content Area */
+        .content-area {
+            padding: 3rem 0;
+        }
+
+        .detail-card {
+            background: var(--background-white);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .detail-card-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .detail-card-title {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .detail-card-title i {
+            margin-right: 0.75rem;
+            color: var(--primary-color);
+        }
+
+        .detail-card-body {
+            padding: 2rem;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--background-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .metric-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .metric-icon.esforco {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .metric-icon.valor {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .metric-icon.classificacao {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        }
+
+        .metric-icon.beneficio {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Classification Badge */
+        .classification-badge-large {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
+        }
+
+        .classification-high {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 2px solid #bbf7d0;
+        }
+
+        .classification-medium {
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 2px solid #fde68a;
+        }
+
+        .classification-low {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #fecaca;
+        }
+
+        /* Description Section */
+        .description-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        /* Progress Bars */
+        .progress-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .progress-value {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .custom-progress {
+            height: 12px;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-bar-custom {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 1s ease-in-out;
+        }
+
+        .progress-bar-esforco {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .progress-bar-valor {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn-custom {
+            padding: 0.875rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .btn-custom i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+            color: white;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+            color: white;
+        }
+
+        .btn-secondary-custom {
+            background: var(--background-white);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary-custom:hover {
+            background: var(--background-light);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* Timeline/Status Section */
+        .status-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 2rem;
+            width: 2px;
+            height: calc(100% - 1rem);
+            background: var(--border-color);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -1.75rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary-color);
+        }
+
+        .timeline-content h6 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .idea-title-header {
+                font-size: 2rem;
+            }
+
+            .idea-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .detail-card-header,
+            .detail-card-body {
+                padding: 1.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-custom {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Loading Animation */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="detail-header">
+        <div class="container">
+            <a href="{% url 'inicio' %}" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Voltar ao Dashboard
+            </a>
+            
+            <h1 class="idea-title-header">{{ ideia.titulo|default:"Título da Ideia" }}</h1>
+            
+            <div class="idea-meta">
+                <div class="meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    Criado em {{ ideia.data_criacao|date:"d/m/Y"|default:"--/--/----" }}
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-user"></i>
+                    Criado por {{ ideia.autor|default:"Usuário" }}
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    Última atualização há {{ ideia.ultima_atualizacao|timesince|default:"alguns dias" }}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="content-area">
+        <div class="container">
+            <!-- Metrics Overview -->
+            <div class="metrics-grid fade-in">
+                <div class="metric-card">
+                    <div class="metric-icon esforco">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="metric-label">Esforço Estimado</div>
+                    <div class="metric-value">{{ ideia.esforco_total|default:"N/A" }}</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon valor">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="metric-label">Valor Esperado</div>
+                    <div class="metric-value">{{ ideia.valor_total|default:"N/A" }}</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon classificacao">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="metric-label">Classificação</div>
+                    <div class="classification-badge-large {% if ideia.classificacao == 'Alta' %}classification-high{% elif ideia.classificacao == 'Média' %}classification-medium{% else %}classification-low{% endif %}">
+                        {{ ideia.classificacao|default:"Não definida" }}
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon beneficio">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="metric-label">Tipo de Benefício</div>
+                    <div class="metric-value">{{ ideia.tipo_beneficio|default:"Geral" }}</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Description -->
+                <div class="col-lg-8">
+                    <div class="detail-card fade-in">
+                        <div class="detail-card-header">
+                            <h3 class="detail-card-title">
+                                <i class="fas fa-lightbulb"></i>
+                                Descrição da Ideia
+                            </h3>
+                        </div>
+                        <div class="detail-card-body">
+                            <p class="description-text">
+                                {{ ideia.descricao|default:"Esta é uma descrição detalhada da ideia inovadora. Aqui você pode explicar o conceito, o problema que resolve, o público-alvo, e como pretende implementar a solução. Seja específico sobre os benefícios esperados e o impacto que esta ideia pode ter." }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Progress Analysis -->
+                    <div class="detail-card fade-in">
+                        <div class="detail-card-header">
+                            <h3 class="detail-card-title">
+                                <i class="fas fa-chart-line"></i>
+                                Análise de Viabilidade
+                            </h3>
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span class="progress-title">Esforço vs Complexidade</span>
+                                    <span class="progress-value">{% if ideia.esforco_total %}{{ ideia.esforco_total }}{% else %}5{% endif %}/10</span>
+                                </div>
+                                <div class="custom-progress">
+                                    <div class="progress-bar-custom progress-bar-esforco" data-width="{% if ideia.esforco_total %}{{ ideia.esforco_total }}{% else %}5{% endif %}0"></div>
+                                </div>
+                            </div>
+
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span class="progress-title">Potencial de Retorno</span>
+                                    <span class="progress-value">{% if ideia.valor_total %}{{ ideia.valor_total }}{% else %}7{% endif %}/10</span>
+                                </div>
+                                <div class="custom-progress">
+                                    <div class="progress-bar-custom progress-bar-valor" data-width="{% if ideia.valor_total %}{{ ideia.valor_total }}{% else %}7{% endif %}0"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Status Timeline -->
+                    <div class="detail-card fade-in">
+                        <div class="detail-card-header">
+                            <h3 class="detail-card-title">
+                                <i class="fas fa-history"></i>
+                                Histórico
+                            </h3>
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="status-timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <h6>Ideia Criada</h6>
+                                        <p>{{ ideia.data_criacao|date:"d/m/Y H:i"|default:"--/--/---- --:--" }}</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <h6>Última Atualização</h6>
+                                        <p>{{ ideia.data_atualizacao|date:"d/m/Y H:i"|default:"--/--/---- --:--" }}</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <h6>Status Atual</h6>
+                                        <p>{{ ideia.status|default:"Em análise" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="detail-card fade-in">
+                        <div class="detail-card-header">
+                            <h3 class="detail-card-title">
+                                <i class="fas fa-cogs"></i>
+                                Ações
+                            </h3>
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="action-buttons">
+                                <button class="btn-custom btn-secondary-custom" onclick="duplicarIdeia()">
+                                    <i class="fas fa-copy"></i>
+                                    Duplicar
+                                </button>
+                                
+                                <button class="btn-custom btn-delete" onclick="confirmarExclusao()">
+                                    <i class="fas fa-trash"></i>
+                                    Excluir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Animate progress bars on load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.querySelectorAll('.progress-bar-custom').forEach(bar => {
+                    const targetWidth = bar.getAttribute('data-width') + '%';
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = targetWidth;
+                    }, 100);
+                });
+            }, 500);
+        });
+
+        function duplicarIdeia() {
+            if (confirm('Deseja criar uma cópia desta ideia?')) {
+                // Implementar lógica de duplicação
+                alert('Funcionalidade de duplicação será implementada!');
+            }
+        }
+
+        function confirmarExclusao() {
+            if (confirm('Tem certeza que deseja excluir esta ideia? Esta ação não pode ser desfeita.')) {
+                // Implementar lógica de exclusão
+                alert('Funcionalidade de exclusão será implementada!');
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                window.history.back();
+            }
+            
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas iniciativas</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+
+:root{
+  --primary: #2563eb;
+  --primary-2: #1e40af;
+  --accent: #3b82f6;
+
+  --success-1:#10b981; --success-2:#059669;
+  --info-1:#3b82f6;    --info-2:#2563eb;
+
+  --text-1:#0f172a;    
+  --text-2:#475569;
+  --bg-0:#f1f5f9;      
+  --bg-1:#e2e8f0;
+  --bg-card-1:#ffffff; --bg-card-2:#f8fafc;
+
+  --border:#e5e7eb;
+
+  --sh-sm:0 1px 2px rgba(0,0,0,.06);
+  --sh-md:0 4px 12px rgba(0,0,0,.08);
+  --sh-lg:0 16px 40px rgba(0,0,0,.12);
+
+  --grad-primary:linear-gradient(135deg,var(--primary) 0%,var(--primary-2) 100%);
+  --grad-card:linear-gradient(135deg,var(--bg-card-1) 0%,var(--bg-card-2) 100%);
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  color:var(--text-1);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,Helvetica,sans-serif;
+  background: linear-gradient(135deg,var(--bg-0),var(--bg-1));
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.header{
+  position:sticky; top:0; z-index:100;
+  background:var(--grad-primary); color:#fff;
+  padding:1.25rem 2rem; box-shadow:var(--sh-md);
+}
+.header-title{ font-weight:800; letter-spacing:-.02em; }
+
+.menu-btn{
+  color:#fff; background:transparent; border:0;
+  padding:.625rem .75rem; border-radius:10px;
+  transition:.2s ease;
+}
+.menu-btn:hover{ background:rgba(255,255,255,.15); transform:translateY(-1px); }
+
+.sidebar{
+  position:fixed; top:0; left:-380px; z-index:1050;
+  width:380px; height:100vh; background:var(--grad-card);
+  box-shadow:var(--sh-lg); transition:.35s ease;
+  border-right:1px solid var(--border); backdrop-filter: blur(12px);
+}
+.sidebar.show{ left:0; }
+
+.sidebar-header{
+  background:var(--grad-primary); color:#fff;
+  padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between;
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.15);
+}
+.sidebar-title{ font-weight:700; }
+.sidebar-close{ background:transparent; color:#fff; border:0; padding:.5rem; border-radius:8px; }
+.sidebar-close:hover{ background:rgba(255,255,255,.15); transform:rotate(90deg); }
+
+.sidebar-menu{ padding:1.25rem 1rem 2rem; }
+.menu-section{ margin-bottom:2rem; }
+.menu-section-title{
+  font-size:.75rem; text-transform:uppercase; color:var(--text-2);
+  letter-spacing:.14em; margin:.25rem 1rem 1rem;
+  position:relative; font-weight:800;
+}
+.menu-section-title::after{
+  content:""; position:absolute; left:0; bottom:-6px; width:34px; height:2px;
+  background:var(--primary); border-radius:2px;
+}
+.sidebar-item{
+  width:100%; border:0; background:transparent; cursor:pointer;
+  display:flex; align-items:center; gap:.75rem;
+  padding:.9rem 1rem; border-radius:12px; color:var(--text-1);
+  transition:.2s ease; font-weight:700;
+}
+.sidebar-item i{ width:22px; text-align:center; }
+.sidebar-item:hover{ background:linear-gradient(135deg,#eff6ff,#dbeafe); color:var(--primary); transform:translateX(6px); box-shadow:var(--sh-sm); }
+.sidebar-item.active{ background:var(--grad-primary); color:#fff; box-shadow:var(--sh-md); }
+
+.overlay{
+  position:fixed; inset:0; z-index:1040; background:rgba(0,0,0,.55);
+  opacity:0; visibility:hidden; transition:.2s ease; backdrop-filter: blur(4px);
+}
+.overlay.show{ opacity:1; visibility:visible; }
+
+.content-area{ max-width:1400px; margin:0 auto; padding:2.5rem 2rem; }
+.page-header{ text-align:center; margin-bottom:2.25rem; position:relative; }
+.page-header::before{
+  content:""; position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+  width:96px; height:4px; background:var(--grad-primary); border-radius:2px;
+}
+.page-title{
+  font-size:clamp(1.6rem,2.8vw,2.4rem); font-weight:900;
+  background:var(--grad-primary);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+.page-subtitle{ color:var(--text-2); }
+
+.view-controls{
+  display:flex; gap:1rem; align-items:center; justify-content:space-between; flex-wrap:wrap;
+  margin-bottom:1.25rem;
+}
+.view-toggle{
+  display:flex; gap:6px; background:#fff; border:1px solid var(--border); border-radius:12px; padding:4px; box-shadow:var(--sh-sm);
+}
+.view-toggle-btn{
+  border:0; background:transparent; color:var(--text-2);
+  padding:.6rem .9rem; border-radius:8px; font-weight:800; letter-spacing:.02em;
+  text-transform:uppercase; display:flex; align-items:center; gap:.5rem; transition:.2s ease;
+}
+.view-toggle-btn:hover{ background:#eef2ff; color:var(--primary); }
+.view-toggle-btn.active{ background:var(--grad-primary); color:#fff; box-shadow:var(--sh-sm); }
+
+.search-filter-bar{ display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; }
+.search-box{ position:relative; min-width:280px; }
+.search-box input{
+  width:100%; padding:.7rem 2.4rem .7rem 1rem; border:2px solid var(--border);
+  border-radius:12px; background:#fff; transition:.2s ease; font-weight:600;
+}
+.search-box input:focus{ outline:0; border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+.search-box i{ position:absolute; right:.75rem; top:50%; transform:translateY(-50%); color:var(--text-2); }
+.filter-select{
+  appearance:none; padding:.7rem .9rem; border-radius:12px; border:2px solid var(--border);
+  background:#fff; color:var(--text-1); min-width:150px; font-weight:600; transition:.2s ease;
+}
+.filter-select:focus{ border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,.12); outline:0; }
+
+.ideas-container{ position:relative; margin:1rem 0 2rem; }
+
+.ideas-scroll-wrapper{
+  overflow-x:auto; overflow-y:hidden;
+  padding:1rem 0 1.25rem; margin:0;
+  -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x proximity;
+}
+.ideas-scroll-wrapper::-webkit-scrollbar{ height:10px; }
+.ideas-scroll-wrapper::-webkit-scrollbar-track{ background:#edf2f7; border-radius:10px; }
+.ideas-scroll-wrapper::-webkit-scrollbar-thumb{ background:var(--grad-primary); border-radius:10px; }
+
+.ideas-horizontal{ display:flex; gap:1.5rem; min-width:max-content; }
+
+.idea-card{
+  scroll-snap-align:start;
+  display:flex; flex-direction:column; width:360px; flex:0 0 auto;
+  background:var(--grad-card); border:1px solid var(--border); border-radius:18px;
+  box-shadow:var(--sh-md); overflow:hidden; position:relative; transition:.22s ease;
+}
+.idea-card::before{ content:""; position:absolute; inset:0 0 auto 0; height:4px; background:var(--grad-primary); }
+.idea-card:hover{ transform:translateY(-6px); box-shadow:var(--sh-lg); border-color:#cfe0ff; }
+
+.idea-card-header{ padding:1.4rem 1.4rem 1.1rem; border-bottom:1px solid var(--border); background:var(--grad-card); }
+.idea-title{ font-size:1.15rem; font-weight:900; line-height:1.2; margin:0 0 .55rem; color:var(--text-1); }
+.idea-description{
+  margin:0; color:var(--text-2);
+  display:-webkit-box;-webkit-box-orient:vertical; overflow:hidden;
+}
+
+.idea-metrics{ padding:1.1rem 1.4rem; flex:1 1 auto; }
+.metric-item{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.65rem 0; border-bottom:1px solid #eef2f7;
+}
+.metric-item:last-child{ border-bottom:0; }
+.metric-label{ display:flex; align-items:center; gap:.55rem; color:var(--text-2); font-weight:700; }
+.metric-label i{ color:var(--primary); }
+.metric-value{ font-weight:900; color:var(--text-1); }
+
+.classification-badge{
+  display:inline-flex; align-items:center; padding:.4rem .7rem; border-radius:999px;
+  font-size:.7rem; font-weight:900; letter-spacing:.03em; text-transform:uppercase;
+  text-align:center; min-width:100px; justify-content:center;
+}
+.classification-high{ background:linear-gradient(135deg,#dcfce7,#bbf7d0); color:#166534; border:1px solid #22c55e; }
+.classification-medium{ background:linear-gradient(135deg,#fef3c7,#fde68a); color:#92400e; border:1px solid #f59e0b; }
+.classification-low{ background:linear-gradient(135deg,#fee2e2,#fecaca); color:#991b1b; border:1px solid #ef4444; }
+
+.classification-ganho{ background:linear-gradient(135deg,#dcfce7,#bbf7d0); color:#166534; border:1px solid #22c55e; }
+.classification-vale{ background:linear-gradient(135deg,#dbeafe,#bfdbfe); color:#1e3a8a; border:1px solid #3b82f6; }
+.classification-simples{ background:linear-gradient(135deg,#fee2e2,#fecaca); color:#991b1b; border:1px solid #ef4444; }
+
+.card-footer{
+  padding:1rem 1.4rem;
+  display:flex;
+  flex-direction:column;
+  gap:.75rem;
+  border-top:1px solid var(--border);
+  background:rgba(248,250,252,0.5);
+}
+
+.benefit-badge{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.5rem;
+  padding:.75rem .8rem;
+  border-radius:10px;
+  font-weight:800;
+  font-size:.85rem;
+  line-height:1.2;
+  text-align:center;
+  text-decoration:none;
+  transition:.2s ease;
+  min-height:44px;
+  border:none;
+  box-shadow:var(--sh-sm);
+  cursor:default;
+  background:var(--grad-primary);
+  color:#fff;
+}
+
+.btn-primary-custom{
+  width:auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.3rem;
+  padding:.35rem .5rem;
+  border-radius:6px;
+  font-weight:600;
+  font-size:.7rem;
+  line-height:1.1;
+  text-align:center;
+  text-decoration:none;
+  transition:.2s ease;
+  min-height:28px;
+  border:none;
+  box-shadow:var(--sh-sm);
+  background:linear-gradient(135deg,var(--success-1),var(--success-2)) !important;
+  color:#fff !important;
+}
+
+.benefit-badge.receita{ background:linear-gradient(135deg,var(--success-1),var(--success-2)); }
+.benefit-badge.horas-erros{ background:linear-gradient(135deg,var(--info-1),var(--info-2)); }
+.benefit-badge i, .btn-primary-custom i{ 
+  flex:0 0 auto; 
+  font-size:.9rem;
+  margin-right:.25rem; 
+}
+
+.btn-primary-custom:hover{ 
+  transform:translateY(-2px); 
+  box-shadow:var(--sh-md); 
+  color:#fff !important;
+  text-decoration:none;
+}
+
+.scroll-nav-btn{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:54px; height:54px; border-radius:50%;
+  background:#fff; color:var(--primary); border:2px solid var(--primary);
+  display:flex; align-items:center; justify-content:center; font-size:1.25rem;
+  z-index:10; box-shadow:var(--sh-md); transition:.2s ease;
+}
+.scroll-nav-btn.prev{ left:-26px; }
+.scroll-nav-btn.next{ right:-26px; }
+.scroll-nav-btn:hover{ background:var(--grad-primary); color:#fff; transform:translateY(-50%) scale(1.06); box-shadow:var(--sh-lg); }
+.scroll-nav-btn.disabled{ opacity:.35; pointer-events:none; transform:translateY(-50%); box-shadow:none; }
+
+.ideas-list{ display:none; flex-direction:column; gap:1rem; }
+.ideas-list.active{ display:flex; }
+
+.list-item{
+  position:relative; background:var(--grad-card); border:1px solid var(--border);
+  border-radius:16px; padding:1.25rem 1.25rem 1rem; box-shadow:var(--sh-sm); transition:.2s ease;
+}
+.list-item:hover{ transform:translateY(-3px); box-shadow:var(--sh-md); border-color:#cfe0ff; }
+.list-item::before{ content:""; position:absolute; inset:0 0 auto 0; height:3px; background:var(--grad-primary); }
+
+.list-item-header{ 
+  display:flex; 
+  align-items:flex-start; 
+  justify-content:space-between; 
+  gap:1rem; 
+  margin-bottom:1rem; 
+  min-width:0; 
+}
+.list-item-title{ font-weight:900; font-size:1.15rem; margin:0 0 .4rem; }
+.list-item-description{
+  color:var(--text-2); margin:0;
+  display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden;
+}
+.list-item-metrics{ 
+  display:flex; 
+  gap:1rem 1.25rem; 
+  flex-wrap:wrap; 
+  align-items:center; 
+}
+.list-metric{ 
+  display:flex; 
+  align-items:center; 
+  gap:.5rem; 
+  color:var(--text-2); 
+  font-weight:700;
+  min-width:0;
+  flex:0 0 auto;
+}
+.list-metric i{ color:var(--primary); }
+
+.ideas-table-container{ display:none; background:#fff; border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:var(--sh-md); }
+.ideas-table-container.active{ display:block; }
+.ideas-table{ width:100%; border-collapse:collapse; }
+.ideas-table thead{ background:var(--grad-primary); color:#fff; }
+.ideas-table thead th{
+  padding:1rem .9rem; text-align:left; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; font-weight:900;
+}
+.ideas-table tbody tr{ border-bottom:1px solid var(--border); transition:.15s ease; }
+.ideas-table tbody tr:hover{ background:linear-gradient(135deg,#f8fafc,#eef2f7); }
+.ideas-table tbody td{ padding:1rem .9rem; vertical-align:middle; min-width:0; }
+
+.table-title{ font-weight:900; color:var(--text-1); }
+.table-description{ color:var(--text-2); max-width:520px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.table-metric{ font-weight:900; color:var(--text-1); }
+
+.ideas-table td > *{ min-width:0; }
+
+.empty-state{
+  text-align:center; padding:4rem 2rem; background:var(--grad-card);
+  border:2px dashed var(--border); border-radius:18px; box-shadow:var(--sh-sm); position:relative; overflow:hidden;
+}
+.empty-state-icon{ font-size:4rem; color:var(--primary); margin-bottom:1rem; opacity:.9; }
+.empty-state h3{ font-weight:900; margin:.25rem 0 1rem; }
+.empty-state p{ color:var(--text-2); max-width:560px; margin:0 auto 1rem; }
+
+.loading{ display:none; text-align:center; padding:2rem; }
+.loading.show{ display:block; }
+.spinner{
+  width:48px; height:48px; border-radius:50%;
+  border:4px solid var(--border); border-top:4px solid var(--primary);
+  animation:spin 1s linear infinite; margin:0 auto .75rem;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+@media (max-width:1200px){
+  .idea-card{ width:330px; }
+}
+
+@media (max-width:992px){
+  .sidebar{ width:100%; left:-100%; }
+  .scroll-nav-btn{ display:none; }
+  
+  .view-controls{
+    flex-direction:column;
+    align-items:stretch;
+    gap:1rem;
+  }
+  
+  .search-filter-bar{
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  
+  .search-box{
+    min-width:250px;
+    flex:1;
+  }
+  
+  .filter-select{
+    min-width:120px;
+    flex:1;
+  }
+}
+
+@media (max-width:768px){
+  .content-area{ padding:2rem 1rem; }
+  .ideas-horizontal{ gap:1rem; }
+  .idea-card{ width:300px; }
+  
+  .list-item{ padding:1rem; }
+  .list-item-header{ 
+    flex-direction:column; 
+    align-items:stretch;
+    gap:.75rem;
+  }
+  
+  .list-item-metrics{
+    flex-direction:column;
+    align-items:stretch;
+    gap:.75rem;
+  }
+  
+  .list-metric{
+    justify-content:space-between;
+    padding:.5rem 0;
+    border-bottom:1px solid #eef2f7;
+  }
+  
+  .list-metric:last-child{
+    border-bottom:none;
+  }
+  
+  .search-filter-bar{
+    flex-direction:column;
+    align-items:stretch;
+  }
+  
+  .search-box,
+  .filter-select{
+    width:100%;
+    min-width:auto;
+  }
+  
+  .view-toggle{
+    justify-content:center;
+  }
+  
+  .view-toggle-btn{
+    flex:1;
+    justify-content:center;
+    padding:.8rem .6rem;
+    font-size:.8rem;
+  }
+}
+
+@media (max-width:480px){
+  .idea-card{ width:280px; }
+  .header{ padding:1rem 1.5rem; }
+  .content-area{ padding:1.5rem .75rem; }
+  
+  .page-title{
+    font-size:1.5rem;
+  }
+  
+  .idea-card-header,
+  .idea-metrics{
+    padding:1rem;
+  }
+  
+  .card-footer{
+    padding:.75rem 1rem;
+  }
+  
+  .benefit-badge,
+  .btn-primary-custom{
+    padding:.6rem .8rem;
+    font-size:.8rem;
+    min-height:40px;
+  }
+}
+
+.metric-value,
+.list-metric-value,
+.table-metric{
+  word-break:break-word;
+  hyphens:auto;
+}
+
+.idea-title,
+.list-item-title,
+.table-title{
+  word-break:break-word;
+  hyphens:auto;
+  overflow-wrap:break-word;
+}
+
+.classification-badge{
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.benefit-badge{
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="d-flex align-items-center">
+            <button class="menu-btn" onclick="toggleSidebar()">
+                <i class="bi bi-list" style="font-size: 1.5rem;"></i>
+            </button>
+            <h1 class="ms-3 mb-0 header-title">Sistema de Iniciativas</h1>
+        </div>
+    </header>
+
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h5 class="mb-0 sidebar-title">Menu de Navegação</h5>
+            <button class="sidebar-close" onclick="closeSidebar()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-section">
+                <div class="menu-section-title">Principais</div>
+                <button class="sidebar-item active" onclick="dashboard()">
+                    <i class="bi bi-grid-3x3-gap"></i>
+                    Dashboard
+                </button>
+                <button class="sidebar-item" onclick="cadastrarIdeia()">
+                    <i class="bi bi-plus-circle"></i>
+                    Nova Ideia
+                </button>
+                {% if eh_gestor %}
+                <button class="sidebar-item" onclick="ideiasEquipes()">
+                    <i class="bi bi-people"></i>
+                    Ideias das Minhas Equipes
+                </button>
+                 {% endif %}
+                    </div>
+                </div>
+
+            <div class="menu-section">
+                <div class="menu-section-title">Configurações</div>
+                <button class="sidebar-item" onclick="perfil()">
+                    <i class="bi bi-person"></i>
+                    Perfil
+                </button>
+                <button class="sidebar-item" onclick="configuracoes()">
+                    <i class="bi bi-gear"></i>
+                    Configurações
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <main class="content-area">
+        <div class="page-header">
+            <h2 class="page-title">Minhas Ideias</h2>
+            <p class="page-subtitle">Gerencie e visualize todas as suas ideias inovadoras</p>
+        </div>
+
+        <div class="view-controls">
+            <div class="view-toggle">
+                <button class="view-toggle-btn active" id="horizontal-btn" onclick="changeView('horizontal')">
+                    <i class="fas fa-grip-horizontal"></i> Cards
+                </button>
+                <button class="view-toggle-btn" id="list-btn" onclick="changeView('list')">
+                    <i class="fas fa-list"></i> Lista
+                </button>
+                <button class="view-toggle-btn" id="table-btn" onclick="changeView('table')">
+                    <i class="fas fa-table"></i> Tabela
+                </button>
+            </div>
+
+            <div class="search-filter-bar">
+                <div class="search-box">
+                    <input id="searchInput" type="text" placeholder="Buscar ideias..." oninput="filterIdeas()">
+                    <i class="fas fa-search"></i>
+                </div>
+                <select class="filter-select" id="benefitFilter" onchange="filterIdeas()">
+                    <option value="">Tipo de benefício (todos)</option>
+                    <option value="receita">Receita</option>
+                    <option value="horas">Horas/Erros</option>
+                    <option value="Satisfação">Satisfação/NPS</option>
+                    <option value="compliance">Compliance</option>
+                </select>
+                <select class="filter-select" id="classFilter" onchange="filterIdeas()">
+                    <option value="">Classificação (todas)</option>
+                    <option value="alta">Alta</option>
+                    <option value="media">Média</option>
+                    <option value="baixa">Baixa</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="ideas-content">
+            <div class="ideas-container" id="horizontal-view">
+                <button class="scroll-nav-btn prev" onclick="scrollIdeas('left')">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="scroll-nav-btn next" onclick="scrollIdeas('right')">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <div class="ideas-scroll-wrapper" id="ideasContainer">
+                    <div class="ideas-horizontal">
+                        {% with lista=ideias|default:minhas_ideias %}
+                        {% for ideia in lista %}
+                        <div class="idea-card"
+                             data-title="{{ ideia.titulo|default:'(Sem título)' }}"
+                             data-description="{{ ideia.descricao|striptags|truncatechars:220 }}"
+                             data-benefit="{% if ideia.tipo_beneficio == 'horas_erros' %}horas{% else %}{{ ideia.tipo_beneficio }}{% endif %}"
+                             data-class="{{ ideia.classificacao|default:''|slugify }}">
+                            <div class="idea-card-header">
+                                <div class="idea-title">{{ ideia.titulo|default:"(Sem título)" }}</div>
+                                <p class="idea-description">
+                                    {{ ideia.descricao|striptags|truncatechars:200 }}
+                                </p>
+                            </div>
+                            <div class="idea-metrics">
+                                <div class="metric-item">
+                                    <span class="metric-label"><i class="fas fa-tools"></i> Esforço Estimado</span>
+                                    <span class="metric-value">
+                                        {% if ideia.esforco_total %}{{ ideia.esforco_total }}{% else %}{{ ideia.esforco_estimado }}{% endif %}
+                                    </span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label"><i></i> Valor Esperado</span>
+                                    <span class="metric-value">{{ ideia.valor_total }}</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label"><i class="fas fa-star"></i> Classificação</span>
+                                    {% with cls=ideia.classificacao|default:''|slugify %}
+                                      <span class="classification-badge
+                                        {% if cls == 'alta' %}classification-high{% elif cls == 'media' %}classification-medium{% elif cls == 'baixa' %}classification-low{% endif %}">
+                                        {{ ideia.classificacao|default:"—" }}
+                                      </span>
+                                    {% endwith %}
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between align-items-center">
+                                {% with ben=ideia.tipo_beneficio %}
+                                  {% if ben == 'receita' %}
+                                    <span class="benefit-badge receita"><i class="fas fa-money-bill-wave"></i> Receita</span>
+                                  {% elif ben == 'horas_erros' %}
+                                    <span class="benefit-badge horas-erros"><i class="fas fa-clock"></i> Horas/Erros</span>
+                                  {% elif ben == 'satisfacao_nps' %}
+                                    <span class="benefit-badge"><i class="fas fa-smile"></i> Satisfação/NPS</span>
+                                  {% elif ben == 'compliance' %}
+                                    <span class="benefit-badge"><i class="fas fa-shield-alt"></i> Compliance</span>
+                                  {% else %}
+                                    <span class="benefit-badge"><i class="fas fa-circle-notch"></i> Outro</span>
+                                  {% endif %}
+                                {% endwith %}
+                                <a href="{% url 'detalhe_ideia' ideia.pk %}" class="btn-primary-custom visualizacao_despesa">
+                                    <i class="fas fa-eye"></i> Visualizar
+                                </a>
+                            </div>
+                        </div>
+                        {% empty %}
+                          <div class="idea-card" data-title="-" data-description="-" data-benefit="-" data-class="-">
+                            <div class="idea-card-header">
+                              <div class="idea-title">Nenhuma ideia encontrada</div>
+                              <p class="idea-description">Cadastre sua primeira ideia para aparecer aqui.</p>
+                            </div>
+                            <div class="idea-metrics">
+                              <div class="metric-item"><span class="metric-label"><i class="fas fa-tools"></i> Esforço Estimado</span><span class="metric-value">—</span></div>
+                              <div class="metric-item"><span class="metric-label"><i class=""></i> Valor Esperado</span><span class="metric-value">—</span></div>
+                              <div class="metric-item"><span class="metric-label"><i class="fas fa-star"></i> Classificação</span><span class="classification-badge">—</span></div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between align-items-center">
+                              <span class="benefit-badge"><i class="fas fa-lightbulb"></i> Ideias</span>
+                              <a href="#" class="btn-primary-custom visualizacao_despesa"><i class="fas fa-plus"></i> Nova</a>
+                            </div>
+                          </div>
+                        {% endfor %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="ideas-list" id="list-view">
+                {% with lista=ideias|default:minhas_ideias %}
+                {% for ideia in lista %}
+                <div class="list-item"
+                     data-title="{{ ideia.titulo|default:'(Sem título)' }}"
+                     data-description="{{ ideia.descricao|striptags|truncatechars:220 }}"
+                     data-benefit="{% if ideia.tipo_beneficio == 'horas_erros' %}horas{% else %}{{ ideia.tipo_beneficio }}{% endif %}"
+                     data-class="{{ ideia.classificacao|default:''|slugify }}">
+                    <div class="list-item-header">
+                        <div>
+                            <div class="list-item-title">{{ ideia.titulo|default:"(Sem título)" }}</div>
+                            <p class="list-item-description">
+                                {{ ideia.descricao|striptags|truncatechars:260 }}
+                            </p>
+                        </div>
+                        <a href="{% url 'detalhe_ideia' ideia.pk %}" class="btn-primary-custom visualizacao_despesa">
+                            <i class="fas fa-eye"></i> Visualizar
+                        </a>
+                    </div>
+                    <div class="list-item-metrics">
+                        <div class="list-metric"><i class="fas fa-tools"></i> <span>Esforço:</span> <span class="list-metric-value">{% if ideia.esforco_total %}{{ ideia.esforco_total }}{% else %}{{ ideia.esforco_estimado }}{% endif %}</span></div>
+                        <div class="list-metric"><i ></i> <span>Valor:</span> <span class="list-metric-value">{{ ideia.valor_total }}</span></div>
+                        <div class="list-metric">
+                            <i class="fas fa-star"></i> <span>Classificação:</span>
+                            {% with cls=ideia.classificacao|default:''|slugify %}
+                              <span class="classification-badge
+                                {% if cls == 'alta' %}classification-high{% elif cls == 'media' %}classification-medium{% elif cls == 'baixa' %}classification-low{% endif %}">
+                                {{ ideia.classificacao|default:"—" }}
+                              </span>
+                            {% endwith %}
+                        </div>
+                        <div class="list-metric">
+                            {% with ben=ideia.tipo_beneficio %}
+                              {% if ben == 'receita' %}
+                                <span class="benefit-badge receita"><i class="fas fa-money-bill-wave"></i> Receita</span>
+                              {% elif ben == 'horas_erros' %}
+                                <span class="benefit-badge horas-erros"><i class="fas fa-clock"></i> Horas/Erros</span>
+                              {% elif ben == 'satisfacao_nps' %}
+                                <span class="benefit-badge"><i class="fas fa-smile"></i> Satisfação/NPS</span>
+                              {% elif ben == 'compliance' %}
+                                <span class="benefit-badge"><i class="fas fa-shield-alt"></i> Compliance</span>
+                              {% else %}
+                                <span class="benefit-badge"><i class="fas fa-circle-notch"></i> Outro</span>
+                              {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                  <div class="list-item" data-title="-" data-description="-" data-benefit="-" data-class="-">
+                    <div class="list-item-header">
+                      <div>
+                        <div class="list-item-title">Nenhuma ideia encontrada</div>
+                        <p class="list-item-description">Cadastre sua primeira ideia para aparecer aqui.</p>
+                      </div>
+                      <a href="#" class="btn-primary-custom visualizacao_despesa"><i class="fas fa-plus"></i> Nova</a>
+                    </div>
+                  </div>
+                {% endfor %}
+                {% endwith %}
+            </div>
+
+            <div class="ideas-table-container" id="table-view">
+                <table class="ideas-table">
+                    <thead>
+                        <tr>
+                            <th>Ideia</th>
+                            <th>Esforço</th>
+                            <th>Valor Esperado</th>
+                            <th>Classificação</th>
+                            <th>Benefício</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% with lista=ideias|default:minhas_ideias %}
+                        {% for ideia in lista %}
+                        <tr data-title="{{ ideia.titulo|default:'(Sem título)' }}"
+                            data-description="{{ ideia.descricao|striptags|truncatechars:220 }}"
+                            data-benefit="{% if ideia.tipo_beneficio == 'horas_erros' %}horas{% else %}{{ ideia.tipo_beneficio }}{% endif %}"
+                            data-class="{{ ideia.classificacao|default:''|slugify }}">
+                            <td>
+                                <div class="table-title">{{ ideia.titulo|default:"(Sem título)" }}</div>
+                                <div class="table-description">{{ ideia.descricao|striptags|truncatechars:160 }}</div>
+                            </td>
+                            <td class="table-metric">{% if ideia.esforco_total %}{{ ideia.esforco_total }}{% else %}{{ ideia.esforco_estimado }}{% endif %}</td>
+                            <td class="table-metric">{{ ideia.valor_total }}</td>
+                            <td>
+                                {% with cls=ideia.classificacao|default:''|slugify %}
+                                  <span class="classification-badge
+                                    {% if cls == 'alta' %}classification-high{% elif cls == 'media' %}classification-medium{% elif cls == 'baixa' %}classification-low{% endif %}">
+                                    {{ ideia.classificacao|default:"—" }}
+                                  </span>
+                                {% endwith %}
+                            </td>
+                            <td>
+                                {% with ben=ideia.tipo_beneficio %}
+                                  {% if ben == 'receita' %}
+                                    <span class="benefit-badge receita"><i class="fas fa-money-bill-wave"></i> Receita</span>
+                                  {% elif ben == 'horas_erros' %}
+                                    <span class="benefit-badge horas-erros"><i class="fas fa-clock"></i> Horas/Erros</span>
+                                  {% elif ben == 'satisfacao_nps' %}
+                                    <span class="benefit-badge"><i class="fas fa-smile"></i> Satisfação/NPS</span>
+                                  {% elif ben == 'compliance' %}
+                                    <span class="benefit-badge"><i class="fas fa-shield-alt"></i> Compliance</span>
+                                  {% else %}
+                                    <span class="benefit-badge"><i class="fas fa-circle-notch"></i> Outro</span>
+                                  {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                <a href="{% url 'detalhe_ideia' ideia.pk %}" class="btn-primary-custom visualizacao_despesa">
+                                    <i class="fas fa-eye"></i> Ver
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                          <tr data-title="-" data-description="-" data-benefit="-" data-class="-">
+                            <td colspan="6">Nenhuma ideia encontrada.</td>
+                          </tr>
+                        {% endfor %}
+                        {% endwith %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <div class="text-muted">Carregando...</div>
+            </div>
+        </div>
+    </main>
+<script>
+  let currentView = 'horizontal';
+
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+  function toggleSidebar() {
+    $('#sidebar')?.classList.add('show');
+    $('#overlay')?.classList.add('show');
+  }
+  function closeSidebar() {
+    $('#sidebar')?.classList.remove('show');
+    $('#overlay')?.classList.remove('show');
+  }
+
+  function updateArrows(){
+    const c = $('#ideasContainer');
+    const prev = $('.scroll-nav-btn.prev');
+    const next = $('.scroll-nav-btn.next');
+    if(!c || !prev || !next) return;
+
+    const max = c.scrollWidth - c.clientWidth - 1; 
+    prev.classList.toggle('disabled', c.scrollLeft <= 0);
+    next.classList.toggle('disabled', c.scrollLeft >= max);
+  }
+  function scrollIdeas(direction) {
+    const c = $('#ideasContainer');
+    if(!c) return;
+    const amount = Math.max(350, c.clientWidth * 0.8);
+    c.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
+    setTimeout(updateArrows, 350);
+  }
+
+  function setActiveBtn(id) {
+    $$('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id)?.classList.add('active');
+  }
+
+  function changeView(view) {
+    currentView = view;
+    setActiveBtn(view + '-btn');
+
+    const horiz = $('#horizontal-view');
+    const list  = $('#list-view');
+    const table = $('#table-view');
+
+    if (horiz) horiz.style.display = 'none';
+    list?.classList.remove('active');
+    table?.classList.remove('active');
+
+    if (view === 'horizontal' && horiz) {
+      horiz.style.display = 'block';
+      setTimeout(updateArrows);
+    } else if (view === 'list' && list) {
+      list.classList.add('active');
+    } else if (view === 'table' && table) {
+      table.classList.add('active');
+    }
+
+    filterIdeas(); 
+  }
+
+  const norm = s => (s || '')
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+
+  function classToGroup(clsRaw){
+    const c = norm(clsRaw);
+    if (c.includes('ganho')) return 'alta';       
+    if (c.includes('vale'))  return 'media';      
+    if (c.includes('solucao') || c.includes('simples')) return 'baixa'; 
+    if (c.includes('media')) return 'media';
+    if (c.includes('baixa')) return 'baixa';
+    return '';
+  }
+
+  function filterIdeas() {
+    const q = norm($('#searchInput')?.value);
+    const b = norm($('#benefitFilter')?.value); 
+    const c = norm($('#classFilter')?.value);   
+
+    const matches = el => {
+      const title = norm(el.dataset.title);
+      const desc  = norm(el.dataset.description);
+      const ben   = norm(el.dataset.benefit); 
+      const clsRaw = el.dataset.class || '';
+      const clsGroup = classToGroup(clsRaw);
+
+      const textOk = !q || title.includes(q) || desc.includes(q);
+      const benOk  = !b || ben.includes(b); 
+      const clsOk  = !c || clsGroup === c || norm(clsRaw).includes(c);
+      return textOk && benOk && clsOk;
+    };
+
+    if (currentView === 'horizontal') {
+      $$('#horizontal-view .idea-card').forEach(card => {
+        card.style.display = matches(card) ? 'block' : 'none';
+      });
+      updateArrows();
+    } else if (currentView === 'list') {
+      $$('#list-view .list-item').forEach(item => {
+        item.style.display = matches(item) ? 'block' : 'none';
+      });
+    } else {
+      $$('#table-view tbody tr').forEach(row => {
+        row.style.display = matches(row) ? 'table-row' : 'none';
+      });
+    }
+  }
+
+  // navegação
+  function dashboard(){ closeSidebar(); window.location.href = "{% url 'inicio' %}"; }
+  function cadastrarIdeia(){ closeSidebar(); window.location.href = "{% url 'cadastrar_ideia' %}"; }
+  function ideiasEquipes(){ closeSidebar(); window.location.href = "{% url 'ideias_minhas_equipes' %}"; }
+  function perfil(){ closeSidebar(); alert('Página de perfil em construção!'); }
+  function configuracoes(){ closeSidebar(); alert('Configurações em construção!'); }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    changeView('horizontal');   
+    updateArrows();             
+    $('#ideasContainer')?.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSidebar(); });
+
+    $$('.metric-item .classification-badge').forEach(badge=>{
+      const c = norm(badge.textContent);
+      badge.classList.remove('classification-high','classification-medium','classification-low',
+                             'classification-ganho','classification-vale','classification-simples');
+      if (c.includes('ganho'))       badge.classList.add('classification-ganho');
+      else if (c.includes('vale'))   badge.classList.add('classification-vale');
+      else if (c.includes('solucao') || c.includes('simples'))
+                                     badge.classList.add('classification-simples');
+    });
+  });
+</script>

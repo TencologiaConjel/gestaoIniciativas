@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Ideia - Sistema de Ideias</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --background-light: #f8fafc;
+            --background-white: #ffffff;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .header-title {
+            font-weight: 600;
+            font-size: 1.375rem;
+            letter-spacing: -0.025em;
+        }
+        
+        .main-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .form-card {
+            background: var(--background-white);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .form-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .form-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .form-body {
+            padding: 2rem;
+        }
+        
+        .section {
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .section-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .required {
+            color: var(--error-color);
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background-color: #fafbfc;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background-color: white;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-check {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .form-check:hover {
+            background-color: #f0f9ff;
+        }
+        
+        .form-check-input {
+            margin-right: 10px;
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .form-check-label {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            flex: 1;
+            
+        }
+        
+        .multiselect-container {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background-color: #fafbfc;
+            transition: all 0.2s ease;
+        }
+        
+        .multiselect-container:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background-color: white;
+        }
+        
+        .multiselect-header {
+            padding: 12px 16px;
+            background-color: #f8fafc;
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 8px 8px 0 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .checkbox-group {
+            max-height: 180px;
+            overflow-y: auto;
+            padding: 5px 20px;
+        }
+        
+        .checkbox-group::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .checkbox-group::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .checkbox-group::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .checkbox-group::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+        
+        .help-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.5);
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        }
+        
+        .btn-outline-secondary {
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 10px;
+            padding: 14px 28px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: var(--text-secondary);
+            border-color: var(--text-secondary);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .conditional-field {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f0f9ff;
+            border-radius: 8px;
+            border: 1px solid #e0f2fe;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 1rem auto;
+                padding: 0 0.5rem;
+            }
+            
+            .form-body {
+                padding: 1.5rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="d-flex align-items-center">
+            <a href="{% url 'inicio' %}" class="back-btn me-3">
+                <i class="bi bi-arrow-left me-2"></i>
+                Voltar
+            </a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h2 class="form-title">Cadastrar Nova Ideia</h2>
+                <p class="form-subtitle">Compartilhe sua ideia para melhorar nossos processos e resultados</p>
+            </div>
+            
+            <form class="form-body" method="post" id="ideaForm">
+                {% csrf_token %}
+                
+                <div class="section">
+                    <h3 class="section-title">
+                        <i class="bi bi-lightbulb"></i>
+                        Informações Básicas
+                    </h3>
+                    <p class="section-description">Descreva sua ideia de forma clara e objetiva</p>
+                    
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="titulo" class="form-label">
+                                Título da Ideia <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" 
+                                   placeholder="Ex: Automatizar processo de aprovação de documentos"
+                                   maxlength="120" required>
+                        </div>
+                        
+                        <div class="col-12 mb-3">
+                            <label for="descricao" class="form-label">
+                                Qual é a dor ou oportunidade? <span class="required">*</span>
+                            </label>
+                            <textarea class="form-control" id="descricao" name="descricao" 
+                                     placeholder="Descreva detalhadamente o problema que sua ideia resolve ou a oportunidade que ela explora..."
+                                     required></textarea>
+                            <div class="help-text">Seja específico sobre o contexto, impacto atual e como sua ideia pode ajudar</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <i class="bi bi-tags"></i>
+                        Classificação da Ideia
+                    </h3>
+                    <p class="section-description">Categorize sua ideia para facilitar a análise</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="tipo_beneficio" class="form-label">
+                                Tipo de Benefício <span class="required">*</span>
+                            </label>
+                            <select class="form-select" id="tipo_beneficio" name="tipo_beneficio" required>
+                                <option value="">Selecione...</option>
+                                <option value="horas_erros">Redução de Horas/Erros</option>
+                                <option value="receita">Aumento de Receita</option>
+                                <option value="satisfacao_nps">Melhoria de Satisfação/NPS</option>
+                                <option value="compliance">Compliance/Conformidade</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="alinhamento_okr" class="form-label">
+                                Alinhamento com OKR <span class="required">*</span>
+                            </label>
+                            <select class="form-select" id="alinhamento_okr" name="alinhamento_okr" required>
+                                <option value="">Selecione...</option>
+                                <option value="prosperar">Prosperar nos negócios</option>
+                                <option value="reter_clientes">Conquistar e reter clientes</option>
+                                <option value="excelencia">Gerir com excelência</option>
+                                <option value="desenvolver_profissionais">Desenvolver profissionais capacitados e senso de pertencimento</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="esforco_estimado" class="form-label">
+                                Esforço Estimado <span class="required">*</span>
+                            </label>
+                            <select class="form-select" id="esforco_estimado" name="esforco_estimado" required>
+                                <option value="">Selecione...</option>
+                                <option value="baixo">Baixo (&lt; 1 semana)</option>
+                                <option value="medio">Médio (1-4 semanas)</option>
+                                <option value="alto">Alto (&gt; 4 semanas)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <i class="bi bi-diagram-3"></i>
+                        Impacto e Execução
+                    </h3>
+                    <p class="section-description">Identifique áreas impactadas e equipes necessárias</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Públicos Impactados</label>
+                            <div class="multiselect-container">
+                                <div class="multiselect-header">
+                                    <i class="bi bi-people me-2"></i>
+                                    Selecione os departamentos afetados
+                                </div>
+                                <div class="checkbox-group" id="publicos-checkbox-group">
+                                    {% for departamento in departamentos %}
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" 
+                                               id="publico_{{ departamento.id }}" 
+                                               name="publicos_impactados" 
+                                               value="{{ departamento.id }}">
+                                        <label class="form-check-label" for="publico_{{ departamento.id }}">
+                                            {{ departamento.nome }}
+                                        </label>
+                                    </div>
+                                    {% empty %}
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="publico_ti" name="publicos_impactados" value="1">
+                                        <label class="form-check-label" for="publico_ti">Tecnologia da Informação</label>
+                                    </div>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="publico_rh" name="publicos_impactados" value="2">
+                                        <label class="form-check-label" for="publico_rh">Recursos Humanos</label>
+                                    </div>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="publico_vendas" name="publicos_impactados" value="3">
+                                        <label class="form-check-label" for="publico_vendas">Vendas</label>
+                                    </div>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="publico_marketing" name="publicos_impactados" value="4">
+                                        <label class="form-check-label" for="publico_marketing">Marketing</label>
+                                    </div>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="publico_financeiro" name="publicos_impactados" value="5">
+                                        <label class="form-check-label" for="publico_financeiro">Financeiro</label>
+                                    </div>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="publico_operacoes" name="publicos_impactados" value="6">
+                                        <label class="form-check-label" for="publico_operacoes">Operações</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="help-text">Departamentos que serão afetados por essa ideia</div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Equipes Necessárias</label>
+                            <div class="multiselect-container">
+                                <div class="multiselect-header">
+                                    <i class="bi bi-diagram-3 me-2"></i>
+                                    Selecione as equipes para execução
+                                </div>
+                                <div class="checkbox-group" id="equipes-checkbox-group">
+                                    {% for departamento in departamentos %}
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" 
+                                               id="equipe_{{ departamento.id }}" 
+                                               name="equipes_necessarias" 
+                                               value="{{ departamento.id }}">
+                                        <label class="form-check-label" for="equipe_{{ departamento.id }}">
+                                            {{ departamento.nome }}
+                                        </label>
+                                    </div>
+                                    {% empty %}
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="equipe_ti" name="equipes_necessarias" value="1">
+                                        <label class="form-check-label" for="equipe_ti">Tecnologia da Informação</label>
+                                    </div>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="equipe_rh" name="equipes_necessarias" value="2">
+                                        <label class="form-check-label" for="equipe_rh">Recursos Humanos</label>
+                                    </div>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="equipe_vendas" name="equipes_necessarias" value="3">
+                                        <label class="form-check-label" for="equipe_vendas">Vendas</label>
+                                    </div>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="equipe_marketing" name="equipes_necessarias" value="4">
+                                        <label class="form-check-label" for="equipe_marketing">Marketing</label>
+                                    </div>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="equipe_financeiro" name="equipes_necessarias" value="5">
+                                        <label class="form-check-label" for="equipe_financeiro">Financeiro</label>
+                                    </div>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="equipe_operacoes" name="equipes_necessarias" value="6">
+                                        <label class="form-check-label" for="equipe_operacoes">Operações</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="help-text">Departamentos necessários para execução da ideia</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <i class="bi bi-shield-exclamation"></i>
+                        Riscos e Patrocínio
+                    </h3>
+                    <p class="section-description">Identifique possíveis riscos e defina patrocinador</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Riscos Identificados</label>
+                            <div class="multiselect-container">
+                                <div class="multiselect-header">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    Selecione os riscos potenciais
+                                </div>
+                                <div class="checkbox-group" id="riscos-checkbox-group">
+                                    {% for risco in riscos %}
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" 
+                                               id="risco_{{ risco.id }}" 
+                                               name="riscos_identificados" 
+                                               value="{{ risco.id }}">
+                                        <label class="form-check-label" for="risco_{{ risco.id }}">
+                                            {{ risco.nome }}
+                                        </label>
+                                    </div>
+                                    
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="conditional-field" id="outro-risco-field">
+                                <label for="risco_outro_descricao" class="form-label">
+                                    Descreva o outro risco <span class="required">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="risco_outro_descricao" 
+                                       name="risco_outro_descricao" maxlength="200"
+                                       placeholder="Descreva o risco não listado acima">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="patrocinador" class="form-label">Patrocinador (Gestor)</label>
+                            <select class="form-select" id="patrocinador" name="patrocinador">
+                                <option value="">Selecione um gestor...</option>
+                                {% for gestor in gestores %}
+                                <option value="{{ gestor.id }}">{{ gestor.nome }} - {{ gestor.departamento.nome }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="help-text">Gestor responsável por patrocinar a ideia</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <i class="bi bi-graph-up"></i>
+                        Métricas e Referências
+                    </h3>
+                    <p class="section-description">Como medir o sucesso e referências adicionais</p>
+                    
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="metrica_sucesso" class="form-label">Métrica de Sucesso</label>
+                            <textarea class="form-control" id="metrica_sucesso" name="metrica_sucesso" 
+                                     placeholder="Como você mediria o sucesso desta ideia? Ex: Redução de 30% no tempo de processo, aumento de 15% na satisfação do cliente..."></textarea>
+                            <div class="help-text">Defina indicadores quantificáveis sempre que possível</div>
+                        </div>
+                        
+                        <div class="col-12 mb-3">
+                            <label for="referencias" class="form-label">Referências</label>
+                            <textarea class="form-control" id="referencias" name="referencias" 
+                                     placeholder="Links, documentos, estudos de caso ou qualquer referência que apoie sua ideia..."></textarea>
+                            <div class="help-text">Materiais de apoio, benchmarks ou inspirações</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                        <i class="bi bi-x-circle me-2"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-2"></i>
+                        Cadastrar Ideia
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('change', function(e) {
+            if (e.target.name === 'riscos_identificados') {
+                const outroRiscoField = document.getElementById('outro-risco-field');
+                const outroRiscoInput = document.getElementById('risco_outro_descricao');
+                const outroCheckbox = document.getElementById('risco_outro') || 
+                                    document.querySelector('input[value="outro"]');
+                
+                if (outroCheckbox && outroCheckbox.checked) {
+                    outroRiscoField.style.display = 'block';
+                    outroRiscoInput.required = true;
+                } else {
+                    outroRiscoField.style.display = 'none';
+                    outroRiscoInput.required = false;
+                    outroRiscoInput.value = '';
+                }
+            }
+        });
+
+        document.getElementById('ideaForm').addEventListener('submit', function(e) {
+            const titulo = document.getElementById('titulo').value.trim();
+            const descricao = document.getElementById('descricao').value.trim();
+            
+            if (!titulo || !descricao) {
+                e.preventDefault();
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return false;
+            }
+            
+            return true;
+        });
+
+        const formElements = document.querySelectorAll('input, textarea, select');
+        formElements.forEach(element => {
+            element.addEventListener('input', function() {
+                const formData = new FormData(document.getElementById('ideaForm'));
+                const data = Object.fromEntries(formData.entries());
+                localStorage.setItem('ideaFormDraft', JSON.stringify(data));
+            });
+        });
+
+        window.addEventListener('load', function() {
+            const draft = localStorage.getItem('ideaFormDraft');
+            if (draft) {
+            }
+        });
+    </script>
+</body>
+</html>
