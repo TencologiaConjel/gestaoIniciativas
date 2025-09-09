@@ -235,16 +235,3 @@ def minhas_ideias_visiveis(request):
         "ideias": ideias,
         "eh_gestor": is_gestor(user)
     })
-
-
-from django.contrib.auth.models import User
-from django.http import HttpResponse
-
-def create_admin(request):
-    username = "admin"
-    password = "Re301203@"
-
-    if not User.objects.filter(username=username).exists():
-        User.objects.create_superuser(username=username, email="", password=password)
-        return HttpResponse("Superusuário criado com sucesso!")
-    return HttpResponse("Superusuário já existe.")
