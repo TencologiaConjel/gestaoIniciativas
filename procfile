@@ -1,1 +1,1 @@
-web: gunicorn gestaoinIniciativas.wsgi
+web: gunicorn gestaoininiciativas.wsgi

@@ -49,8 +49,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gestaoIniciativas.wsgi.application'
 
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
