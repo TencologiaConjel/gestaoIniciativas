@@ -95,7 +95,6 @@ def inicio(request):
     ideias_aprovadas = Ideia.objects.filter(status='aprovada').count()
     minhas_ideias = Ideia.objects.filter(autor=request.user).order_by('-id')
 
-    # DEBUG - Vamos ver o que está acontecendo
     print(f"DEBUG - Usuário: {request.user}")
     print(f"DEBUG - is_gestor result: {is_gestor(request.user)}")
     
@@ -110,7 +109,7 @@ def inicio(request):
         'total_ideias': total_ideias,
         'ideias_aprovadas': ideias_aprovadas,
         'minhas_ideias': minhas_ideias,
-        'eh_gestor': is_gestor(request.user),  # Adicionar esta linha
+        'eh_gestor': is_gestor(request.user),  
     }
 
     return render(request, 'inicio.html', context)
@@ -120,32 +119,25 @@ def detalhe_ideia(request, pk):
     ideia = get_object_or_404(Ideia, pk=pk)
     user = request.user
     
-    # Verifica se o usuário pode ver a ideia
     pode_ver = False
     
-    # 1. Administrador pode ver tudo
     if user.is_staff or user.is_superuser:
         pode_ver = True
     
-    # 2. Autor da ideia pode ver
     elif ideia.autor == user:
         pode_ver = True
     
-    # 3. Patrocinador pode ver
     elif ideia.patrocinador and ideia.patrocinador.user == user:
         pode_ver = True
     
-    # 4. Gestor dos departamentos envolvidos pode ver
     else:
         try:
             colaborador = Colaborador.objects.get(user=user)
             if colaborador.papel == 'gestor':
-                # Verifica se o gestor está em algum dos departamentos das equipes necessárias
                 eh_gestor_equipe = ideia.equipes_necessarias.filter(
                     id=colaborador.departamento.id
                 ).exists()
                 
-                # Verifica se o gestor está em algum dos departamentos dos públicos impactados
                 eh_gestor_publico = ideia.publicos_impactados.filter(
                     id=colaborador.departamento.id
                 ).exists()
@@ -168,14 +160,12 @@ def detalhe_ideia(request, pk):
 def ideias_minhas_equipes(request):
     user = request.user
     
-    # Verifica se o usuário é gestor
     if not is_gestor(user):
         raise PermissionDenied("Apenas gestores podem acessar esta página.")
     
     try:
         colaborador = Colaborador.objects.get(user=user)
         
-        # Busca ideias onde o departamento do gestor está envolvido
         ideias = (
             Ideia.objects
             .filter(
